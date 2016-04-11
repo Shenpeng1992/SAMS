@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>400</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>文件(&amp;F)</string>
+    </property>
+    <addaction name="action_OpenImg"/>
+    <addaction name="action_openFloder"/>
+    <addaction name="separator"/>
+    <addaction name="action_SetWorkPath"/>
+    <addaction name="action_setProductFloder"/>
+    <addaction name="separator"/>
+    <addaction name="action_AddLImg"/>
+    <addaction name="action_AddLFloder"/>
+    <addaction name="action_AddRImg"/>
+    <addaction name="action_AddRFloder"/>
+    <addaction name="separator"/>
+    <addaction name="action_unloadL"/>
+    <addaction name="action_unloadR"/>
+    <addaction name="action_unloadP"/>
+    <addaction name="action_unloadAll"/>
+    <addaction name="separator"/>
+    <addaction name="action_LoadWorkSpace"/>
+    <addaction name="action_SaveWorkSpace"/>
+   </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>视图(&amp;V)</string>
+    </property>
+    <addaction name="action_FileDlg"/>
+    <addaction name="action_InfoDlg"/>
+    <addaction name="separator"/>
+    <addaction name="action_LDlg"/>
+    <addaction name="action_RDlg"/>
+    <addaction name="action_PDlg"/>
+   </widget>
+   <widget class="QMenu" name="menu_TerrainMeasurement">
+    <property name="title">
+     <string>地形测量(&amp;T)</string>
+    </property>
+    <addaction name="action_getCloud"/>
+   </widget>
+   <widget class="QMenu" name="menu_ObjectMeasurement">
+    <property name="title">
+     <string>目标测量(&amp;O)</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_PriMeasurement">
+    <property name="title">
+     <string>预处理(&amp;P)</string>
+    </property>
+    <addaction name="action_Calib"/>
+    <addaction name="action_Epiploar"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menu_PriMeasurement"/>
+   <addaction name="menu_TerrainMeasurement"/>
+   <addaction name="menu_ObjectMeasurement"/>
+   <addaction name="menu_View"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="action_AddLFloder">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/addfloder.png</normaloff>:/bin/Data/Icon/addfloder.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加左影像文件夹(&amp;L)</string>
+   </property>
+  </action>
+  <action name="action_AddRFloder">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/addfloder.png</normaloff>:/bin/Data/Icon/addfloder.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加右影像文件夹(&amp;R)</string>
+   </property>
+  </action>
+  <action name="action_LoadWorkSpace">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/removeworkspace.png</normaloff>:/bin/Data/Icon/removeworkspace.png</iconset>
+   </property>
+   <property name="text">
+    <string>加载工作区(&amp;A)</string>
+   </property>
+  </action>
+  <action name="action_SaveWorkSpace">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/loadworkspace.png</normaloff>:/bin/Data/Icon/loadworkspace.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存工作区(&amp;S)</string>
+   </property>
+  </action>
+  <action name="action_FileDlg">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>文件窗口(&amp;F)</string>
+   </property>
+  </action>
+  <action name="action_AddLImg">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/add.png</normaloff>:/bin/Data/Icon/add.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加左影像</string>
+   </property>
+  </action>
+  <action name="action_AddRImg">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/add.png</normaloff>:/bin/Data/Icon/add.png</iconset>
+   </property>
+   <property name="text">
+    <string>添加右影像</string>
+   </property>
+  </action>
+  <action name="action_unloadL">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/removeI.png</normaloff>:/bin/Data/Icon/removeI.png</iconset>
+   </property>
+   <property name="text">
+    <string>移除左影像区</string>
+   </property>
+  </action>
+  <action name="action_unloadR">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/removeI.png</normaloff>:/bin/Data/Icon/removeI.png</iconset>
+   </property>
+   <property name="text">
+    <string>移除右影像区</string>
+   </property>
+  </action>
+  <action name="action_unloadAll">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/removeI.png</normaloff>:/bin/Data/Icon/removeI.png</iconset>
+   </property>
+   <property name="text">
+    <string>移除所有影像</string>
+   </property>
+  </action>
+  <action name="action_OpenImg">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/add.png</normaloff>:/bin/Data/Icon/add.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开影像(&amp;O)</string>
+   </property>
+  </action>
+  <action name="action_unloadP">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/removeI.png</normaloff>:/bin/Data/Icon/removeI.png</iconset>
+   </property>
+   <property name="text">
+    <string>移除产品区</string>
+   </property>
+  </action>
+  <action name="action_SetWorkPath">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/setfloder.png</normaloff>:/bin/Data/Icon/setfloder.png</iconset>
+   </property>
+   <property name="text">
+    <string>设置工作路径</string>
+   </property>
+  </action>
+  <action name="action_setProductFloder">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/setfloder.png</normaloff>:/bin/Data/Icon/setfloder.png</iconset>
+   </property>
+   <property name="text">
+    <string>设定产品目录(&amp;P)</string>
+   </property>
+  </action>
+  <action name="action_openFloder">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/add.png</normaloff>:/bin/Data/Icon/add.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开文件夹(&amp;F)</string>
+   </property>
+  </action>
+  <action name="action_InfoDlg">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>信息窗口(&amp;I)</string>
+   </property>
+  </action>
+  <action name="action_LDlg">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>左影像窗口(&amp;L)</string>
+   </property>
+  </action>
+  <action name="action_RDlg">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>右影像窗口(&amp;R)</string>
+   </property>
+  </action>
+  <action name="action_PDlg">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>产品窗口(&amp;P)</string>
+   </property>
+  </action>
+  <action name="action_getCloud">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/Product.png</normaloff>:/bin/Data/Icon/Product.png</iconset>
+   </property>
+   <property name="text">
+    <string>地形点云生成(&amp;C)</string>
+   </property>
+  </action>
+  <action name="action_Calib">
+   <property name="text">
+    <string>相机定标(&amp;C)</string>
+   </property>
+  </action>
+  <action name="action_Epiploar">
+   <property name="text">
+    <string>核线校正(&amp;E)</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

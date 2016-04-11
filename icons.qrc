@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../bin/Data/Icon/add.png</file>
+        <file>../bin/Data/Icon/dialog.png</file>
+        <file>../bin/Data/Icon/mainlest.png</file>
+        <file>../bin/Data/Icon/save.png</file>
+        <file>../bin/Data/Icon/addfloder.png</file>
+        <file>../bin/Data/Icon/fresh.png</file>
+        <file>../bin/Data/Icon/loadworkspace.png</file>
+        <file>../bin/Data/Icon/removeI.png</file>
+        <file>../bin/Data/Icon/removeworkspace.png</file>
+        <file>../bin/Data/Icon/setfloder.png</file>
+        <file>../bin/Data/Icon/FileDialog.png</file>
+        <file>../bin/Data/Icon/down.png</file>
+        <file>../bin/Data/Icon/up.png</file>
+        <file>../bin/Data/Icon/ImgInfo.png</file>
+        <file>../bin/Data/Icon/SysLog.png</file>
+        <file>../bin/Data/Icon/Img.png</file>
+        <file>../bin/Data/Icon/Product.png</file>
+        <file>../bin/Data/Icon/translation.png</file>
+        <file>../bin/Data/Icon/narrow.png</file>
+        <file>../bin/Data/Icon/enlarge.png</file>
+        <file>../bin/Data/Icon/rotate.png</file>
+        <file>../bin/Data/Icon/open.png</file>
+        <file>../bin/Data/Icon/cancel.png</file>
+        <file>../bin/Data/Icon/move.png</file>
+        <file>../bin/Data/Icon/minimap.png</file>
+    </qresource>
+</RCC>
