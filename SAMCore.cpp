@@ -138,7 +138,7 @@ void SAMCore::setCurrentProduct(int a)
 void SAMCore::AddFile()//打开文件
 {
     QStringList filenamelist;
-    filenamelist=QFileDialog::getOpenFileNames(NULL,"打开产品",productFloder,"其他文件 (*.*);;JPG (*.jpg *.JPG);;PNG (*.png *.PNG);;BMP (*.bmp *.BMP)");
+    filenamelist=QFileDialog::getOpenFileNames(NULL,"打开产品",productFloder,"其他文件 (*.*);;JPG (*.jpg *.JPG);;PNG (*.png *.PNG);;BMP (*.bmp *.BMP);;点云文件 (*.pcs)");
 
     if(filenamelist.isEmpty())
         return;
@@ -551,165 +551,23 @@ void SAMCore::getTerrianCloud()//获取地形点云
     LOG=QDateTime::currentDateTime().toString("yyyy.MM.dd;hh:mm:ss")+"\t"+"Start processing stero-images";
     writeLog(LOG);
 
-    int leftStartNum=0;//影像计数开始
-    int rightStartNum=0;
-
     qDebug()<<"Main thread:" <<QThread::currentThreadId();
-    ////S2 检查影像，并初始化模块
-    if(NameListL.size()!=NameListR.size())  return;
 
-    createProcessDlg();
     createTerrianThread();
+    createProcessDlg();
 
-    QString m_1Lpath;
-    QString m_1Rpath;
-    QString m_2Lpath;
-    QString m_2Rpath;
-
-    QString m_1LName;
-    QString m_1RName;
-    QString m_2LName;
-    QString m_2RName;
-
-    ///////////////////////////////////写首个绝对变换参数//////////////////////////////////
-    QString path = productFloder+"/"+"_absolute7para.txt";
-    ofstream fileout;
-    fileout.open(path.toStdString().c_str(), ios::out|ios::binary);
-    double a=0.,b=1.;
-    fileout.write((char*)&a, sizeof(double));
-    fileout.write((char*)&a, sizeof(double));
-    fileout.write((char*)&a, sizeof(double));
-    fileout.write((char*)&b, sizeof(double));
-    fileout.write((char*)&a, sizeof(double));
-    fileout.write((char*)&a, sizeof(double));
-    fileout.write((char*)&a, sizeof(double));
-    fileout.close();
-    ///////////////////////////////////写首个绝对变换参数//////////////////////////////////
-
-    sub_thread->start();
-    ////S3 逐像对生成地形
-    for(int i=0;i<NameListL.size();i++)
-    {
-        ////@S4 解析文件名
-        m_1Lpath = NameListL.at(i);
-        m_1Rpath = NameListR.at(i);
-
-        m_1LName = getShortName(m_1Lpath);
-        m_1RName = getShortName(m_1Rpath);
-        ////S5 执行SGB匹配并写LOG
-        QString LOG;
-        LOG=QDateTime::currentDateTime().toString("yyyy.MM.dd;hh:mm:ss")+"\t"+"SGBM Processing and calucating 3D-points";
-        writeLog(LOG);
-
-        if(loadImages(m_1Lpath, m_1Rpath)==false)    return;
-        emit SGBMMatchSignals(leftsrcImage, rightsrcImage, m_1LName, m_1RName, productFloder);
-//        m_subThread->SGBMMatch(leftsrcImage, rightsrcImage, m_1LName, m_1RName, productFloder);
-
-        if (i>0)
-        {
-            ////@S6 执行surf匹配并写LOG
-            QString LOG;
-            LOG=QDateTime::currentDateTime().toString("yyyy.MM.dd;hh:mm:ss")+"\t"+"SURF Processing and calucating 3D-points";
-            writeLog(LOG);
-
-            m_2Lpath = NameListL.at(i-1);
-            m_2Rpath = NameListR.at(i-1);
-            m_2LName = getShortName(m_2Lpath);
-            m_2RName = getShortName(m_2Rpath);
-
-            leftsrcBefore=imread(m_2Lpath.toStdString().c_str(), 1);
-//            m_subThread->surfMatch( leftsrcBefore , leftsrcImage ,m_2LName ,m_1LName ,
-//                                    m_2RName ,m_1RName ,productFloder);
-            emit surfMatchSignals( leftsrcBefore , leftsrcImage ,m_2LName ,m_1LName ,
-                   m_2RName ,m_1RName ,productFloder);
-        }
-
-        QString path1 = productFloder;
-        path1.append("\\").append(m_2LName).append(m_2RName).append("_SGBM_3d.txt");
-        QString path2 = productFloder;
-        path2.append("\\").append(m_1LName).append(m_2LName).append("_absolute7para.txt");
-        QStringList m_ParaList;
-        m_ParaList << path2;
-        QString path3 = productFloder;
-        path3.append("\\").append(m_2LName).append(m_2RName).append("_SGBM_3d_transed.txt");
-
-//        m_subThread->transPoints(path1, m_ParaList, path3);
-        emit transPointsSignals(path1, m_ParaList, path3);
-
-        if (leftStartNum < NameListL.size()-1)
-        {
-            ++leftStartNum;
-            ++rightStartNum;
-            m_2Lpath = NameListL.at(leftStartNum);
-            QFileInfo fi3(m_2Lpath);
-            m_2LName = fi3.baseName();
-            m_2Rpath = NameListR.at(rightStartNum);
-            QFileInfo fi4(m_2Rpath);
-            m_2RName = fi4.baseName();
-        }
-    }
-    progressdlg->hide();
-}
-
-void SAMCore::createProcessDlg()
-{
-    progressdlg=new QDialog;
-    bar=new QProgressBar;
-    vbox=new QVBoxLayout;
-    labtext=new QLabel("正在生成地形点云...");
-
-    bar->setValue(0);
-    bar->setMaximum(NameListL.size());
-    vbox->addWidget(labtext);
-    vbox->addWidget(bar);
-    progressdlg->setLayout(vbox);
-    progressdlg->setWindowTitle("生成地形点云");
-    progressdlg->show();
-}
-
-bool SAMCore::loadImages( QString leftImage, QString rightImage )
-{
-    leftsrcImage = imread(leftImage.toStdString().c_str(), 1);
-    if (leftsrcImage.data == NULL)
-    {
-        QMessageBox::information(0,QStringLiteral("提示"), QStringLiteral("打开影像失败"));
-        return false;
-    }
-    leftsrcWidth = leftsrcImage.cols;
-    leftsrcHeight = leftsrcImage.rows;
-
-    rightsrcImage = imread(rightImage.toStdString().c_str(), 1);
-    if (rightsrcImage.data == NULL)
-    {
-        QMessageBox::information(0,QStringLiteral("提示"), QStringLiteral("打开影像失败"));
-        return false;
-    }
-    rightsrcWidth = rightsrcImage.cols;
-    rightsrcHeight = rightsrcImage.rows;
-    return true;
+    emit getTerrianCloudSignals();
 }
 
 void SAMCore::createTerrianThread()
 {
-    m_subThread = new SAMTerrianThread;
+    m_subThread = new SAMTerrianThread(NameListL,NameListR,productFloder);
 
     sub_thread=new QThread;
-
     m_subThread->moveToThread(sub_thread);
 
-    qRegisterMetaType<Mat>("Mat");
-    connect(this, SIGNAL(surfMatchSignals(Mat,Mat,QString,QString,QString,QString,QString)),
-        m_subThread,SLOT(surfMatch(Mat,Mat,QString,QString,QString,QString,QString)));
-    connect(this, SIGNAL(SGBMMatchSignals(Mat,Mat,QString,QString,QString)),
-        m_subThread,SLOT(SGBMMatch(Mat,Mat,QString,QString,QString)));
-    connect(this, SIGNAL(transPointsSignals(QString,QStringList,QString)),
-        m_subThread,SLOT(transPoints(QString,QStringList,QString)));
-}
-
-QString SAMCore::getShortName(QString fullname)
-{
-    QFileInfo fi3(fullname);
-    return fi3.baseName();
+    connect(this,SIGNAL(getTerrianCloudSignals()),m_subThread,SLOT(getTerrianCloud()));
+    sub_thread->start();
 }
 
 void SAMCore::cameraCalibration(int nx, int ny)    ////@相机定标
@@ -930,4 +788,31 @@ void SAMCore::cameraCalibration(int nx, int ny)    ////@相机定标
         else
             assert(0);
     }
+}
+
+void SAMCore::createProcessDlg()//获取地形点云
+{
+    progressdlg=new QDialog;
+    labtext=new QLabel("地形点云进度");
+    vbox=new QVBoxLayout;
+    bar=new QProgressBar;
+    OK= new QPushButton("OK");
+
+    progressdlg->setWindowTitle("正在生成地形点云");
+    vbox->addWidget(labtext);
+    vbox->addWidget(bar);
+
+    bar->setRange(0,NameListL.size());
+
+    connect(OK,SIGNAL(clicked(bool)),progressdlg,SLOT(accept()));
+    connect(m_subThread,SIGNAL(FreshProgress(int)),bar,SLOT(setValue(int)));
+    connect(m_subThread,SIGNAL(Finished()),this,SLOT(changeProcessDlg()));
+    progressdlg->setLayout(vbox);
+    progressdlg->show();
+}
+
+void SAMCore::changeProcessDlg()//获取地形点云
+{
+    vbox->removeWidget(bar);
+    vbox->addWidget(OK);
 }

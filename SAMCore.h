@@ -44,15 +44,11 @@ private:
     SAMTerrianThread *m_subThread;//处理地形子进程
     QThread *sub_thread;
 
-    QDialog *progressdlg;
+    QDialog *progressdlg;//进度GUI
     QLabel *labtext;
     QVBoxLayout *vbox;
     QProgressBar *bar;
-
-    //原始影像参数
-    Mat leftsrcImage,rightsrcImage;
-    int leftsrcWidth,leftsrcHeight,rightsrcWidth,rightsrcHeight;
-    Mat leftsrcBefore;
+    QPushButton *OK;
 
 public:
     //队列与条目获取
@@ -122,15 +118,12 @@ public slots:
 
     void writeLog(QString a);
 
-    void createProcessDlg();
-
     void getTerrianCloud();//获取地形点云
 
-    bool loadImages(QString leftImage, QString rightImage);
+    void createProcessDlg();//创建进度对话框
+    void changeProcessDlg();
 
     void createTerrianThread();
-
-    QString getShortName(QString fullname);
 
     void cameraCalibration(int nx,int ny);
 public:
@@ -139,11 +132,7 @@ public:
 signals:
     void writeLog();
 
-    void surfMatchSignals(Mat, Mat, QString, QString, QString, QString, QString);
-
-    void SGBMMatchSignals(Mat, Mat, QString, QString, QString);
-
-    void transPointsSignals(QString, QStringList, QString);
+    void getTerrianCloudSignals();
 
     void showproducts(QString product);
 };

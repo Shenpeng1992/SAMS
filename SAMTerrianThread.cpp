@@ -1,9 +1,15 @@
 ﻿#include "SAMTerrianThread.h"
 #include "QDebug"
 #include <QThread>
+#include <QDir>
+#include <QMessageBox>
 
-SAMTerrianThread::SAMTerrianThread()
+SAMTerrianThread::SAMTerrianThread(QStringList LList, QStringList RList, QString floder)
 {
+    if(LList.size()==0||RList.size()==0)  return;
+    else {NameListL=LList;NameListR=RList;}
+    if(floder.isEmpty()) return;
+    else productFloder=floder;
 }
 
 void SAMTerrianThread::surfMatch(Mat leftImage1, Mat leftImage2, QString leftFileName1, QString leftFileName2,QString rightFileName1, QString rightFileName2, QString imageAbsolutePath)
@@ -52,9 +58,9 @@ void SAMTerrianThread::surfMatch(Mat leftImage1, Mat leftImage2, QString leftFil
 
     ////////////////////////////////提取SURF匹配对应的三维点（二进制）///////////////////////////////////
     QString Points3dPath1 = imageAbsolutePath;
-    Points3dPath1.append("\\").append(leftFileName1).append(rightFileName1).append("_SGBM_3d.txt");
+    Points3dPath1.append("\\").append(leftFileName1).append(rightFileName1).append("_SGBM_3d.pcs");
     ifstream file1;
-    file1.open(Points3dPath1.toStdString().c_str(), ios::in|ios::binary);
+     file1.open(Points3dPath1.toStdString().c_str(), ios::in|ios::binary);
     if (file1.is_open() == false)
     {
         //QMessageBox::information(this, "Tpis", "Open Failed1!");
@@ -62,7 +68,7 @@ void SAMTerrianThread::surfMatch(Mat leftImage1, Mat leftImage2, QString leftFil
     }
 
     QString Points3dPath2 = imageAbsolutePath;
-    Points3dPath2.append("\\").append(leftFileName2).append(rightFileName2).append("_SGBM_3d.txt");
+    Points3dPath2.append("\\").append(leftFileName2).append(rightFileName2).append("_SGBM_3d.pcs");
     ifstream file2;
     file2.open(Points3dPath1.toStdString().c_str(), ios::in|ios::binary);
     if (file2.is_open() == false)
@@ -719,4 +725,120 @@ void SAMTerrianThread::transPoints( QString pointFilePath, QStringList ParaFileP
     //     }
     //     fclose(fp_out);
     //m_mutex.unlock();
+}
+
+bool SAMTerrianThread::loadImages( QString leftImage, QString rightImage )
+{
+    leftsrcImage = imread(leftImage.toStdString().c_str(), 1);
+    if (leftsrcImage.data == NULL)
+    {
+        QMessageBox::information(0,QStringLiteral("提示"), QStringLiteral("打开影像失败"));
+        return false;
+    }
+    leftsrcWidth = leftsrcImage.cols;
+    leftsrcHeight = leftsrcImage.rows;
+
+    rightsrcImage = imread(rightImage.toStdString().c_str(), 1);
+    if (rightsrcImage.data == NULL)
+    {
+        QMessageBox::information(0,QStringLiteral("提示"), QStringLiteral("打开影像失败"));
+        return false;
+    }
+    rightsrcWidth = rightsrcImage.cols;
+    rightsrcHeight = rightsrcImage.rows;
+    return true;
+}
+
+QString SAMTerrianThread::getShortName(QString fullname)
+{
+    QFileInfo fi3(fullname);
+    return fi3.baseName();
+}
+
+void SAMTerrianThread::getTerrianCloud()//获取地形点云
+{
+    qDebug()<<"Sub thread:" <<QThread::currentThreadId();
+
+    int leftStartNum=0;//影像计数开始
+    int rightStartNum=0;
+
+    ////S2 检查影像，并初始化模块
+    if(NameListL.size()!=NameListR.size())  return;
+
+    QString m_1Lpath;
+    QString m_1Rpath;
+    QString m_2Lpath;
+    QString m_2Rpath;
+
+    QString m_1LName;
+    QString m_1RName;
+    QString m_2LName;
+    QString m_2RName;
+
+    ///////////////////////////////////写首个绝对变换参数//////////////////////////////////
+    QString path = productFloder+"/"+"_absolute7para.txt";
+    ofstream fileout;
+    fileout.open(path.toStdString().c_str(), ios::out|ios::binary);
+    double a=0.,b=1.;
+    fileout.write((char*)&a, sizeof(double));
+    fileout.write((char*)&a, sizeof(double));
+    fileout.write((char*)&a, sizeof(double));
+    fileout.write((char*)&b, sizeof(double));
+    fileout.write((char*)&a, sizeof(double));
+    fileout.write((char*)&a, sizeof(double));
+    fileout.write((char*)&a, sizeof(double));
+    fileout.close();
+    ///////////////////////////////////写首个绝对变换参数//////////////////////////////////
+    ////S3 逐像对生成地形
+    for(int i=0;i<NameListL.size();i++)
+    {
+        emit FreshProgress(i);
+        ////@S4 解析文件名
+        m_1Lpath = NameListL.at(i);
+        m_1Rpath = NameListR.at(i);
+
+        m_1LName = getShortName(m_1Lpath);
+        m_1RName = getShortName(m_1Rpath);
+        ////S5 执行SGB匹配并写LOG
+
+        if(loadImages(m_1Lpath, m_1Rpath)==false)    return;
+        SGBMMatch(leftsrcImage, rightsrcImage, m_1LName, m_1RName, productFloder);
+
+        if (i>0)
+        {
+            ////@S6 执行surf匹配并写LOG
+            m_2Lpath = NameListL.at(i-1);
+            m_2Rpath = NameListR.at(i-1);
+            m_2LName = getShortName(m_2Lpath);
+            m_2RName = getShortName(m_2Rpath);
+
+            leftsrcBefore=imread(m_2Lpath.toStdString().c_str(), 1);
+            surfMatch(leftsrcBefore , leftsrcImage ,m_2LName ,m_1LName ,
+                                    m_2RName ,m_1RName ,productFloder);
+        }
+
+        QString path1 = productFloder;
+        path1.append("\\").append(m_2LName).append(m_2RName).append("_SGBM_3d.pcs");
+        QString path2 = productFloder;
+        path2.append("\\").append(m_2LName).append(m_1LName).append("_absolute7para.txt");
+        QStringList m_ParaList;
+        m_ParaList << path2;
+        QString path3 = productFloder;
+        path3.append("\\").append(m_2LName).append(m_2RName).append("_SGBM_3d_transed.pcs");
+
+        transPoints(path1, m_ParaList, path3);
+
+        if (leftStartNum < NameListL.size()-1)
+        {
+            ++leftStartNum;
+            ++rightStartNum;
+            m_2Lpath = NameListL.at(leftStartNum);
+            QFileInfo fi3(m_2Lpath);
+            m_2LName = fi3.baseName();
+            m_2Rpath = NameListR.at(rightStartNum);
+            QFileInfo fi4(m_2Rpath);
+            m_2RName = fi4.baseName();
+        }
+    }
+    emit Finished();
 }
