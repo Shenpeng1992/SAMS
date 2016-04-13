@@ -11,6 +11,7 @@ DESTDIR = $$BIN_PATH
 INCLUDEPATH +=  $$INC_PATH
 INCLUDEPATH +=  $$INC_PATH/opencv
 INCLUDEPATH +=  $$INC_PATH/opencv2
+INCLUDEPATH +=  $$F:/3rd_Library/glut/include
 
 #设定LIB和bin
 contains(QT_ARCH,i386){
@@ -54,6 +55,8 @@ win32-g++{
         LIBS += $$LIB_PATH/opencv_video2410d.lib
         LIBS += $$LIB_PATH/opencv_nonfree2410d.lib
         LIBS += $$LIB_PATH/glut.lib
+        LIBS += $$LIB_PATH/glut32.lib
+        SUFFIX_STR =d
     }else{
         message(Building $$TARGET with MSVS WIN32 RELEASE mode.)
         LIBS += $$LIB_PATH/opencv_calib3d2410.lib
@@ -71,5 +74,8 @@ win32-g++{
         LIBS += $$LIB_PATH/opencv_video2410.lib
         LIBS += $$LIB_PATH/opencv_nonfree2410.lib
         LIBS += $$LIB_PATH/glut.lib
+        LIBS += $$LIB_PATH/glut32.lib
     }
 }
+
+TARGET              = $$TARGET$$SUFFIX_STR

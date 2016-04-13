@@ -42,6 +42,7 @@ private:
     int leftsrcWidth,leftsrcHeight,rightsrcWidth,rightsrcHeight;
     Mat leftsrcBefore;
 
+    QStringList m_ParaList;
 public slots:
 
     void surfMatch(Mat leftImage1, Mat leftImage2, QString leftFileName1, QString leftFileName2,QString rightFileName1, QString rightFileName2, QString imageAbsolutePath);

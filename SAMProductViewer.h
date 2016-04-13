@@ -19,6 +19,7 @@ private:
         IsImg=0,
         IsDEM=1
     }m_LoadMode;
+    SAMCore *localCore;
     SAMImgViewer *viewer;
     vector<CDataStyle::points_xyz> point_cloud;
     vector<CDataStyle::points_xyz> all_point_cloud;

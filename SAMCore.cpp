@@ -799,6 +799,9 @@ void SAMCore::createProcessDlg()//获取地形点云
     OK= new QPushButton("OK");
 
     progressdlg->setWindowTitle("正在生成地形点云");
+
+    vbox->removeWidget(bar);
+
     vbox->addWidget(labtext);
     vbox->addWidget(bar);
 

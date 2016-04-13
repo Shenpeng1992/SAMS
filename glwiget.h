@@ -63,8 +63,9 @@ public:
 	
 	int R_Table[255];
 	int G_Table[255];
-	int B_Table[255];
-	
+    int B_Table[255];
+public slots:
+    void Refresh();
 };
 
 #endif // GLWIGET_H

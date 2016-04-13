@@ -788,6 +788,7 @@ void SAMTerrianThread::getTerrianCloud()//获取地形点云
     fileout.write((char*)&a, sizeof(double));
     fileout.write((char*)&a, sizeof(double));
     fileout.close();
+    m_ParaList<<path;
     ///////////////////////////////////写首个绝对变换参数//////////////////////////////////
     ////S3 逐像对生成地形
     for(int i=0;i<NameListL.size();i++)
@@ -818,13 +819,14 @@ void SAMTerrianThread::getTerrianCloud()//获取地形点云
         }
 
         QString path1 = productFloder;
-        path1.append("\\").append(m_2LName).append(m_2RName).append("_SGBM_3d.pcs");
+        path1.append("\\").append(m_1LName).append(m_1RName).append("_SGBM_3d.pcs");
         QString path2 = productFloder;
-        path2.append("\\").append(m_2LName).append(m_1LName).append("_absolute7para.txt");
-        QStringList m_ParaList;
-        m_ParaList << path2;
+        if(i!=0){
+            path2.append("\\").append(m_2LName).append(m_1LName).append("_absolute7para.txt");
+            m_ParaList << path2;
+        }
         QString path3 = productFloder;
-        path3.append("\\").append(m_2LName).append(m_2RName).append("_SGBM_3d_transed.pcs");
+        path3.append("\\").append("transed_").append(m_1LName).append(m_1RName).append("_SGBM_3d.pcs");
 
         transPoints(path1, m_ParaList, path3);
 
@@ -840,5 +842,6 @@ void SAMTerrianThread::getTerrianCloud()//获取地形点云
             m_2RName = fi4.baseName();
         }
     }
+    m_ParaList.clear();
     emit Finished();
 }

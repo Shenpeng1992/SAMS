@@ -8,6 +8,7 @@ SAMProductViewer::SAMProductViewer(SAMCore *core)
 {
     m_LoadMode = IsImg;
     viewer=new SAMImgViewer(core);
+    localCore=core;
 
     m_glWidget=new glwiget;
 //    glLayout->addWidget(m_glWidget);
@@ -43,6 +44,12 @@ void SAMProductViewer::changeMode(LoadMode Mode)
 void SAMProductViewer::loadPoints( QString pointFilrPath )
 {
     point_cloud.clear();
+
+    QString LOG;
+    LOG=QDateTime::currentDateTime().toString("yyyy.MM.dd;hh:mm:ss")+"\t"+"View Point Clouds "+pointFilrPath;
+
+    localCore->writeLog(LOG);
+
 
     //////////////////////////////以二进制文件读取模型文件/////////////////////////////////////
     ifstream filein;
@@ -102,6 +109,8 @@ void SAMProductViewer::loadPoints( QString pointFilrPath )
 
     m_glWidget->GetPeakZ(hist,m_glWidget->PeakZ_min,m_glWidget->PeakZ_max,intera_Z);
     m_glWidget->points = &all_point_cloud;
+
+    m_glWidget->Refresh();
 }
 
 void SAMProductViewer::loadProduct(QString string)
