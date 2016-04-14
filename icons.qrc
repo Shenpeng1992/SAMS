@@ -25,5 +25,7 @@
         <file>../bin/Data/Icon/cancel.png</file>
         <file>../bin/Data/Icon/move.png</file>
         <file>../bin/Data/Icon/minimap.png</file>
+        <file>../bin/Data/Icon/CameraCalib.png</file>
+        <file>../bin/Data/Icon/EPline.png</file>
     </qresource>
 </RCC>

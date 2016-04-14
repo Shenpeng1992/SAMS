@@ -841,6 +841,7 @@ void SAMTerrianThread::getTerrianCloud()//获取地形点云
             QFileInfo fi4(m_2Rpath);
             m_2RName = fi4.baseName();
         }
+        emit ShowPoints(path3);
     }
     m_ParaList.clear();
     emit Finished();

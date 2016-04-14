@@ -126,6 +126,8 @@ public slots:
     void createTerrianThread();
 
     void cameraCalibration(int nx,int ny);
+
+    void Showproducts(QString product);
 public:
     SAMCore();
 
@@ -134,7 +136,7 @@ signals:
 
     void getTerrianCloudSignals();
 
-    void showproducts(QString product);
+    void showproducts(QString);
 };
 
 

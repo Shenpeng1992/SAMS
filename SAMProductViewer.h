@@ -14,6 +14,7 @@ class SAMProductViewer : public QWidget
     Q_OBJECT
 public:
     SAMProductViewer(SAMCore *core);
+    bool isAdded;
 private:
     enum LoadMode{
         IsImg=0,

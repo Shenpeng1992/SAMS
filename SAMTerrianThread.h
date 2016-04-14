@@ -56,6 +56,7 @@ public slots:
 private:
     CMatrix matrix;
 signals:
+    void ShowPoints(QString);
     void FreshProgress(int);
     void Finished();
 };

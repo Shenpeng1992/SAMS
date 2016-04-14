@@ -82,6 +82,8 @@ private slots:
 
     void CalibDlgAccepted();
 
+    void on_action_SwitchAdd_triggered(bool checked);
+
 private:
     Ui::MainWindow *ui;
 

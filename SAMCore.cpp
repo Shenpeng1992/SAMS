@@ -810,6 +810,7 @@ void SAMCore::createProcessDlg()//获取地形点云
     connect(OK,SIGNAL(clicked(bool)),progressdlg,SLOT(accept()));
     connect(m_subThread,SIGNAL(FreshProgress(int)),bar,SLOT(setValue(int)));
     connect(m_subThread,SIGNAL(Finished()),this,SLOT(changeProcessDlg()));
+    connect(m_subThread,SIGNAL(ShowPoints(QString)),this,SLOT(Showproducts(QString)));
     progressdlg->setLayout(vbox);
     progressdlg->show();
 }
@@ -818,4 +819,9 @@ void SAMCore::changeProcessDlg()//获取地形点云
 {
     vbox->removeWidget(bar);
     vbox->addWidget(OK);
+}
+
+void SAMCore::Showproducts(QString product)
+{
+    emit showproducts(product);
 }

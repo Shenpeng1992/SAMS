@@ -43,6 +43,7 @@ void SAMProductViewer::changeMode(LoadMode Mode)
 
 void SAMProductViewer::loadPoints( QString pointFilrPath )
 {
+    if(isAdded==false)  all_point_cloud.clear();
     point_cloud.clear();
 
     QString LOG;

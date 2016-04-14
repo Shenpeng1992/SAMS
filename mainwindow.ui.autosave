@@ -275,11 +275,19 @@
    </property>
   </action>
   <action name="action_Calib">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/CameraCalib.png</normaloff>:/bin/Data/Icon/CameraCalib.png</iconset>
+   </property>
    <property name="text">
     <string>相机定标(&amp;C)</string>
    </property>
   </action>
   <action name="action_Epiploar">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/bin/Data/Icon/EPline.png</normaloff>:/bin/Data/Icon/EPline.png</iconset>
+   </property>
    <property name="text">
     <string>核线校正(&amp;E)</string>
    </property>

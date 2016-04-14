@@ -77,6 +77,7 @@ void MainWindow::createMdiArea()//创建主窗口
     m_pimgviewer=new SAMProductViewer(core);
     m_splitter->addWidget(m_imgsplitter);
     m_splitter->addWidget(m_pimgviewer);
+    connect(core,SIGNAL(showproducts(QString)),m_pimgviewer,SLOT(loadProduct(QString)));
 
     this->setCentralWidget(m_splitter);
 
@@ -277,4 +278,10 @@ void MainWindow::CalibDlgAccepted()
 
     core->cameraCalibration(nx,ny);
 
+}
+
+void MainWindow::on_action_SwitchAdd_triggered(bool checked)
+{
+    qDebug()<<checked;
+    m_pimgviewer->isAdded=checked;
 }
